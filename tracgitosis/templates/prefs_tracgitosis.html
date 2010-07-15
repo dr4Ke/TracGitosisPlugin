@@ -1,0 +1,29 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="prefs.html" />
+  <head>
+    <title>gitosis SSH public key</title>
+  </head>
+  <body>
+
+    <div class="field">
+      <label>Username: ${username}</label>
+    </div>
+    <div class="field">
+      <label>gitosis SSH public key:
+        <input name="sshkey" size="100"
+               value="${sshkey}"/>
+      </label>
+      <p class="hint">The SSH public key is used by gitosis-admin to grant
+      access to git repositories following configuration file directives.</p>
+    </div>
+    <div>
+      <pre>${message}</pre>
+    </div>
+
+  </body>
+</html>
