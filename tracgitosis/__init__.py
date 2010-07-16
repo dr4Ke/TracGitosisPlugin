@@ -1,3 +1,2 @@
 # 
-from tracgitosisprefs import *
-from tracgitosisadmin import *
+from tracgitosis import *

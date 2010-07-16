@@ -14,15 +14,32 @@
 
     <form class="mod" id="modbasic" method="post" action="">
       <fieldset>
-        <legend>gitweb</legend>
+        <legend>Anonymous access</legend>
         <div class="field">
-          <label>Enable gitweb:
+          <label>Enable anonymous access through git-daemon and gitweb:
+            <input type="checkbox" name="daemon" value="enabled" checked="${repo.daemon or None}" />
+          </label>
+          <p class="hint">The repository will be accessible anonymously through both gitweb and
+                          git daemon.</p>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Gitweb settings</legend>
+        <div class="field">
+          <label>Display in gitweb project list:
             <input type="checkbox" name="gitweb" value="enabled" checked="${repo.gitweb or None}" />
           </label>
+          <p class="hint">The repository will be displayed in the gitweb project list unless
+                          the anonymous access is disabled (see above checkbox).</p>
         </div>
         <div class="field">
           <label>Description:<br />
             <input type="text" name="description" size="48" value="${repo.description}" />
+          </label>
+        </div>
+        <div class="field">
+          <label>Owner:<br />
+            <input type="text" name="owner" size="48" value="${repo.owner}" />
           </label>
         </div>
       </fieldset>
