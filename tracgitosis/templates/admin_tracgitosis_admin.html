@@ -1,0 +1,40 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/">
+  <xi:include href="admin.html" />
+  <head>
+    <title>Gitosis Admin Repository Settings</title>
+  </head>
+
+  <body>
+    <h2>Gitosis Admin Repository Settings</h2>
+
+    <form class="mod" id="modbasic" method="post" action="">
+      <fieldset>
+        <legend>gitosis-admin Repository</legend>
+        <div class="field">
+          <label>Admin Repository name:<br />
+            <input type="text" name="admin_repo" value="${admin.admin_repo}" />
+          </label>
+        </div>
+        <div class="field">
+          <label>User:<br />
+            <input type="text" name="user" value="${admin.user}" />
+          </label>
+        </div>
+        <div class="field">
+          <label>Server:<br />
+            <input type="text" name="server" size="48" value="${admin.server}" />
+          </label>
+        </div>
+      </fieldset>
+      <div class="buttons">
+        <input type="submit" value="Apply changes"/>
+      </div>
+    </form>
+  </body>
+
+</html>
