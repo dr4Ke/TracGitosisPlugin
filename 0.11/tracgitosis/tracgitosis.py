@@ -68,7 +68,8 @@ class TracGitosisPrefs(Component):
         if status != 0:
           add_warning(req, _('Error while cloning gitosis-admin repository. Please check your settings and/or passphrase free connection to this repository for the user running trac (in most cases, the web server user)'))
           message = 'return code: '+str(status)+'\nmessage:\n'+message
-          add_warning(req, _(message))
+          if message:
+            add_warning(req, _(message))
         sshkey = self.getsshkey(req, req.session.sid)
         data['username'] = req.session.sid
         data['sshkey'] = sshkey
@@ -180,7 +181,8 @@ class TracGitosisAdminRepoPanel(Component):
         if status != 0:
           add_warning(req, _('Error while cloning gitosis-admin repository. Please check your settings and/or passphrase free connection to this repository for the user running trac (in most cases, the web server user)'))
           message = 'return code: '+str(status)+'\nmessage:\n'+message
-          add_warning(req, _(message))
+          if message:
+            add_warning(req, _(message))
         repo = replace(os.path.basename(self.config.get('trac', 'repository_dir')), '.git', '')
         if req.method == 'POST':
             config = {}
