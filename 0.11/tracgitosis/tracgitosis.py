@@ -316,11 +316,17 @@ def init_admin(user, server, repo, path):
 def gitpull(path):
     """ Mise à jour du dépôt
     """
-    # On met le dépôt à jour
-    cmd = ['git', 'pull']
+    # On réinitialise le dépôt en cas de problème lors de la dernière exécution
+    cmd = ['git', 'reset', '--hard']
     proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=path)
     stdout, stderr = proc.communicate()
     status = proc.returncode
+    if status == 0:
+      # On met le dépôt à jour
+      cmd = ['git', 'pull']
+      proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=path)
+      stdout, stderr = proc.communicate()
+      status = proc.returncode
     return status, 'STDOUT: '+stdout+' STDERR: '+stderr
 
 
