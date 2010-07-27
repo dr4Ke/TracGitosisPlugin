@@ -278,7 +278,7 @@ class sortedConfigParser(ConfigParser.RawConfigParser):
       sortedItems.sort()
       for item in sortedItems:
         if item != '__name__':
-          fp.write("%s = %s\n" % (item, str(self.sections['gitosis'][item]).replace('\n', '\n\t')))
+          fp.write("%s = %s\n" % (item, str(self._sections['gitosis'][item]).replace('\n', '\n\t')))
     fp.write("\n")
     sortedSections = self._sections.keys()
     sortedSections.sort()
