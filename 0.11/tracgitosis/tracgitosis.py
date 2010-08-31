@@ -1,3 +1,5 @@
+# -*- coding:Utf-8 -*-
+
 """
 tracgitosis:
 a plugin for Trac, interface for some gitosis-admin configuration
@@ -100,7 +102,7 @@ class TracGitosisPrefs(Component):
         with the given public key.
         """
         #key = req.args.get('sshkey', '').strip()
-        # On vérifie si la clé a bien une syntaxe normale
+        # verify key syntax
         import re
         status = 0
         if re.search(r'^ssh-rsa [A-Za-z0-9+/]*=* ', key) == None:
@@ -242,7 +244,7 @@ class TracGitosisAdminRepoPanel(Component):
             add_warning('Admin repository commit and push failed. Message: '+message)
 
     def _read_config(self, file_path):
-      # On lit le fichier actuel
+      # read the configuration file
       gitosisConf = sortedConfigParser()
       self.log.debug('read gitosis config file: '+file_path)
     
@@ -294,10 +296,9 @@ class sortedConfigParser(ConfigParser.RawConfigParser):
 
 
 def init_admin(user, server, repo, path):
-    """ Initialisation du dépôt d'admin.
+    """ Initialize admin repository
 
     """
-    # on initialise le dépôt git s'il n'existe pas
     status = 0
     stdout = ''
     stderr = ''
@@ -314,15 +315,15 @@ def init_admin(user, server, repo, path):
     return status, message
 
 def gitpull(path):
-    """ Mise à jour du dépôt
+    """ repository update (pull)
     """
-    # On réinitialise le dépôt en cas de problème lors de la dernière exécution
+    # do a reset in case of an error from the previous execution
     cmd = ['git', 'reset', '--hard']
     proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=path)
     stdout, stderr = proc.communicate()
     status = proc.returncode
     if status == 0:
-      # On met le dépôt à jour
+      # Update the repository
       cmd = ['git', 'pull']
       proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=path)
       stdout, stderr = proc.communicate()
@@ -338,7 +339,7 @@ def gitcommit(repodir, file):
     stderr = ''
     message = ''
     status = 0
-    # on fait le commit
+    # commiting
     cmd = ['git', 'add', file]
     proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=repodir)
     stdout, stderr = proc.communicate()
@@ -348,12 +349,12 @@ def gitcommit(repodir, file):
     stdout, stderr = proc.communicate()
     status = proc.returncode
     if status == 1:
-      # On vérifie si le message de commit indique qu'il n'y a rien à faire
+      # check if something was commited
       pattern = 'nothing to commit'
       if stdout.find(pattern) >= 0:
         status = 0
     if status == 0:
-      # On pousse vers gitosis
+      # push to gitosis
       cmd = ['git', 'push']
       proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=repodir)
       stdout, stderr = proc.communicate()
