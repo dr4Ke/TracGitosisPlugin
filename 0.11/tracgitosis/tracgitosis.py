@@ -115,16 +115,18 @@ class TracGitosisPrefs(Component):
             status = 1
             message = 'malformed key (must begin with \'ssh-rsa \' followed by a BASE64 encoded chain)'
         if status == 0:
-            relkeyfile = 'keydir/'+username+'.pub'
-            keyfile = self.env.path+'/'+self.admrepo+'/'+relkeyfile
-            f = open(keyfile, 'w')
-            f.write(key+'\n')
-            f.close()
+            # Update gitosis-admin repository
             tracname = self.config.get('project', 'name')
             self.log.debug('update admin repository')
             result, message = gitpull(self.env.path+'/'+self.admrepo)
             if result != 0:
                 add_warning('Admin repository update failed. Message: '+message)
+            # Save key in the file
+            relkeyfile = 'keydir/'+username+'.pub'
+            keyfile = self.env.path+'/'+self.admrepo+'/'+relkeyfile
+            f = open(keyfile, 'w')
+            f.write(key+'\n')
+            f.close()
             self.log.debug('set ' + username + ' public key')
             status, message = gitcommit(self.env.path+'/'+self.admrepo, relkeyfile, tracname)
         if status == 0:
