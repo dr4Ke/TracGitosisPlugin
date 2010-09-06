@@ -121,12 +121,13 @@ class TracGitosisPrefs(Component):
             f.write(key+'\n')
             f.close()
             repo = replace(os.path.basename(self.config.get('trac', 'repository_dir')), '.git', '')
+            tracname = self.config.get('project', 'name')
             if repo != '':
                 self.log.debug('set public key on repo: '+repo)
                 result, message = gitpull(self.env.path+'/'+self.admrepo)
                 if result != 0:
                     add_warning('Admin repository update failed. Message: '+message)
-            status, message = gitcommit(self.env.path+'/'+self.admrepo, relkeyfile)
+            status, message = gitcommit(self.env.path+'/'+self.admrepo, relkeyfile, tracname)
         if status == 0:
             add_notice(req, _('Your preferences have been saved.'))
         else:
@@ -251,7 +252,8 @@ class TracGitosisAdminRepoPanel(Component):
             else:
                 conf.set('repo '+repo, item, config[item].encode('utf-8'))
         self._write_config(self.env.path+'/'+self.admrepo+'/gitosis.conf', conf)
-        result, message = gitcommit(self.env.path+'/'+self.admrepo, 'gitosis.conf')
+        tracname = self.config.get('project', 'name')
+        result, message = gitcommit(self.env.path+'/'+self.admrepo, 'gitosis.conf', tracname)
         if result != 0:
             add_warning('Admin repository commit and push failed. Message: '+message)
 
@@ -343,7 +345,7 @@ def gitpull(path):
     return status, 'STDOUT: '+stdout+' STDERR: '+stderr
 
 
-def gitcommit(repodir, file):
+def gitcommit(repodir, file, tracinstancename=''):
     """ Commit and push a file
 
     """
@@ -356,7 +358,7 @@ def gitcommit(repodir, file):
     proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=repodir)
     stdout, stderr = proc.communicate()
     status = proc.returncode
-    cmd = ['git', 'commit', '-m', 'commited by trac']
+    cmd = ['git', 'commit', '-m', 'commited by trac instance: ' + tracinstancename ]
     proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=repodir)
     stdout, stderr = proc.communicate()
     status = proc.returncode
