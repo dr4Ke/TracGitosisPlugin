@@ -86,10 +86,12 @@ class TracGitosisPrefs(Component):
 
         This function read the file keydir/<user>.pub in the local gitosis-admin working tree.
         """
-        self.log.debug('get public key on repo: '+repo)
-        result, message = gitpull(self.env.path+'/'+self.admrepo)
-        if result != 0:
-            add_warning('Admin repository update failed. Message: '+message)
+        repo = replace(os.path.basename(self.config.get('trac', 'repository_dir')), '.git', '')
+        if repo != '':
+            self.log.debug('get public key on repo: '+repo)
+            result, message = gitpull(self.env.path+'/'+self.admrepo)
+            if result != 0:
+                add_warning('Admin repository update failed. Message: '+message)
         keyfile = self.env.path+'/'+self.admrepo+'/keydir/'+username+'.pub'
         if os.path.exists(keyfile):
             f = open(keyfile, 'r')
@@ -118,10 +120,12 @@ class TracGitosisPrefs(Component):
             f = open(keyfile, 'w')
             f.write(key+'\n')
             f.close()
-            self.log.debug('set public key on repo: '+repo)
-            result, message = gitpull(self.env.path+'/'+self.admrepo)
-            if result != 0:
-                add_warning('Admin repository update failed. Message: '+message)
+            repo = replace(os.path.basename(self.config.get('trac', 'repository_dir')), '.git', '')
+            if repo != '':
+                self.log.debug('set public key on repo: '+repo)
+                result, message = gitpull(self.env.path+'/'+self.admrepo)
+                if result != 0:
+                    add_warning('Admin repository update failed. Message: '+message)
             status, message = gitcommit(self.env.path+'/'+self.admrepo, relkeyfile)
         if status == 0:
             add_notice(req, _('Your preferences have been saved.'))
