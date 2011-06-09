@@ -3,3 +3,7 @@ This plugin allow partial gitosis administration from Trac.
 Users will be able to add their public SSH key in gitosis (new settings tab).
 
 Admins will be able to set the location of the gitosis-admin repository and settings for the git repository associated with Trac (requires GitPlugin.) 
+
+Official page and tracker: https://trac-hacks.org/wiki/TracGitosisPlugin
+
+Git repository: https://github.com/dr4Ke/TracGitosisPlugin
