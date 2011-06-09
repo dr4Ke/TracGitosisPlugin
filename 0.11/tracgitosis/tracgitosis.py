@@ -111,7 +111,7 @@ class TracGitosisPrefs(Component):
         # verify key syntax
         import re
         status = 0
-        if re.search(r'^ssh-(rsa|dss) [A-Za-z0-9+/]*=* ', key) == None:
+        if re.search(r'^(ssh-(rsa|dss) [A-Za-z0-9+/]*=* |$)', key) == None:
             status = 1
             message = 'malformed key (must begin with \'ssh-rsa \' or \'ssh-dss \' followed by a BASE64 encoded chain)'
         if status == 0:
@@ -124,11 +124,18 @@ class TracGitosisPrefs(Component):
             # Save key in the file
             relkeyfile = 'keydir/'+username+'.pub'
             keyfile = self.env.path+'/'+self.admrepo+'/'+relkeyfile
-            f = open(keyfile, 'w')
-            f.write(key+'\n')
-            f.close()
-            self.log.debug('set ' + username + ' public key')
-            status, message = gitcommit(self.env.path+'/'+self.admrepo, relkeyfile, tracname)
+            if len(key) > 0:
+                self.log.debug('writing key in ' + keyfile)
+                f = open(keyfile, 'w')
+                f.write(key+'\n')
+                f.close()
+                self.log.debug('set ' + username + ' public key')
+                status, message = gitcommit(self.env.path+'/'+self.admrepo, relkeyfile, tracname)
+            else:
+                if os.path.exists(keyfile):
+                    self.log.debug('deleting file ' + keyfile)
+                    os.unlink(keyfile)
+                    status, message = gitcommit(self.env.path+'/'+self.admrepo, relkeyfile, tracname, action='rm')
         if status == 0:
             add_notice(req, _('Your preferences have been saved.'))
         else:
@@ -354,7 +361,7 @@ def gitpull(path):
     return status, 'STDOUT: '+stdout+' STDERR: '+stderr
 
 
-def gitcommit(repodir, file, tracinstancename=''):
+def gitcommit(repodir, file, tracinstancename='', action='add'):
     """ Commit and push a file
 
     """
@@ -363,7 +370,7 @@ def gitcommit(repodir, file, tracinstancename=''):
     message = ''
     status = 0
     # commiting
-    cmd = ['git', 'add', file]
+    cmd = ['git', action, file]
     proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=repodir)
     stdout, stderr = proc.communicate()
     status = proc.returncode
