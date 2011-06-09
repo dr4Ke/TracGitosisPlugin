@@ -1,10 +1,10 @@
 from setuptools import find_packages, setup
 
-version='1.0-dev'
+version='1.0.5'
 
 setup(name='TracGitosis',
       version=version,
-      description="user's ssh public key for use with gitosis",
+      description="gitosis basic settings",
       author='Christophe Drevet',
       author_email='dr4ke@dr4ke.net',
       url='',
