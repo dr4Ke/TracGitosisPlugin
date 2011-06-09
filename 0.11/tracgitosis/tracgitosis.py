@@ -148,7 +148,11 @@ def _save_config(config, req, log):
                            'not been saved.'))
 
 class TracGitosisAdminPanel(Component):
-    implements(IAdminPanelProvider)
+    implements(IAdminPanelProvider, ITemplateProvider)
+
+    def get_templates_dirs(self):
+        from pkg_resources import resource_filename
+        return [resource_filename(__name__, 'templates')]
 
     def get_admin_panels(self, req):
         if 'TRAC_ADMIN' in req.perm:
@@ -168,7 +172,7 @@ class TracGitosisAdminPanel(Component):
 
 
 class TracGitosisAdminRepoPanel(Component):
-    implements(IAdminPanelProvider)
+    implements(IAdminPanelProvider, ITemplateProvider)
     admrepo = Option(section='tracgitosis',
                      name='admin_repo',
                      default='gitosis-admin',
@@ -184,6 +188,10 @@ class TracGitosisAdminRepoPanel(Component):
                             name='server',
                             default='localhost',
                             doc='gitosis server name')
+
+    def get_templates_dirs(self):
+        from pkg_resources import resource_filename
+        return [resource_filename(__name__, 'templates')]
 
     def get_admin_panels(self, req):
         if 'TRAC_ADMIN' in req.perm:
