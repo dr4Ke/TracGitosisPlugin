@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-version='1.0.6'
+version='1.0.6a'
 
 setup(name='TracGitosis',
       version=version,
