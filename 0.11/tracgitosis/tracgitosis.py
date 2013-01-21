@@ -353,6 +353,12 @@ def gitpull(path):
     stdout, stderr = proc.communicate()
     status = proc.returncode
     if status == 0:
+      # Clean repository
+      cmd = ['git', 'clean', '-f']
+      proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=path)
+      stdout, stderr = proc.communicate()
+      status = proc.returncode
+    if status == 0:
       # Update the repository
       cmd = ['git', 'pull']
       proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=path)
