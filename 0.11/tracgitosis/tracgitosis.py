@@ -375,20 +375,27 @@ def gitcommit(repodir, file, tracinstancename='', action='add'):
     stderr = ''
     message = ''
     status = 0
-    # commiting
+    # add/remove file
     cmd = ['git', action, file]
     proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=repodir)
     stdout, stderr = proc.communicate()
     status = proc.returncode
-    cmd = ['git', 'commit', '-m', 'commited by trac instance: ' + tracinstancename ]
+    # check status
+    cmd = ['git', 'status', '--short']
     proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=repodir)
     stdout, stderr = proc.communicate()
     status = proc.returncode
-    if status == 1:
-      # check if something was commited
-      pattern = 'nothing to commit'
-      if stdout.find(pattern) >= 0:
-        status = 0
+    # commit
+    if len(stdout) > 0:
+        cmd = ['git', 'commit', '-m', 'commited by trac instance: ' + tracinstancename ]
+        proc = Popen(cmd, shell=False, stdin=None, stdout=PIPE, stderr=PIPE, cwd=repodir)
+        stdout, stderr = proc.communicate()
+        status = proc.returncode
+        if status == 1:
+          # check if something was commited
+          pattern = 'nothing to commit'
+          if stdout.find(pattern) >= 0:
+            status = 0
     if status == 0:
       # push to gitosis
       cmd = ['git', 'push']
@@ -396,7 +403,8 @@ def gitcommit(repodir, file, tracinstancename='', action='add'):
       stdout, stderr = proc.communicate()
       status = proc.returncode
     if status == 0:
-      message = stdout
+      message += stdout
     else:
-      message = stderr
+      message += stdout
+      message += stderr
     return status, message
