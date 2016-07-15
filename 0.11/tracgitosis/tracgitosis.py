@@ -111,7 +111,7 @@ class TracGitosisPrefs(Component):
         # verify key syntax
         import re
         status = 0
-        if re.search(r'^(ssh-(rsa|dss) [A-Za-z0-9+/]*=* |$)', key) == None:
+        if re.search(r'^(ssh-(rsa|dss) [A-Za-z0-9+/]*=*|$)', key) == None:
             status = 1
             message = 'malformed key (must begin with \'ssh-rsa \' or \'ssh-dss \' followed by a BASE64 encoded chain)'
         if status == 0:
